@@ -61,6 +61,8 @@ node02 | SUCCESS => {
 #### Playbook: Là file chứa các task được ghi dưới định dạng YAML. Máy controller sẽ đọc các task này trong Playbook sau đó đẩy các lệnh thực thi tương ứng bằng Python xuống các máy con.
 
 ```sh
+root@quynv:/etc/ansible/playbook# vim apache.yaml 
+
 ---
 - hosts: local
   tasks: 
