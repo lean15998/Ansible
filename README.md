@@ -60,26 +60,20 @@ node02 | SUCCESS => {
 ```
 #### Playbook: Là file chứa các task được ghi dưới định dạng YAML. Máy controller sẽ đọc các task này trong Playbook sau đó đẩy các lệnh thực thi tương ứng bằng Python xuống các máy con.
 
+VD: Cài đặt apache cho các host `node`
+
 ```sh
 root@quynv:/etc/ansible/playbook# vim apache.yaml 
 
 ---
-- hosts: local
+- hosts: node
   tasks: 
     - name: Ping check host
       ping: ~
     - name: Install Apache2
       apt: name=apache2 update_cache=yes
+```      
 ```sh
-
----
-- hosts: local
-  tasks:
-    - name: Ping check host
-      ping: ~
-    - name: Install Apache2
-      apt: name=apache2 update_cache=yes
-
 root@quynv:/etc/ansible/playbook# ansible-playbook apache.yaml
 
 PLAY [node] **************************************************************************************************************************************************************
