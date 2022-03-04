@@ -10,7 +10,7 @@ Ansible có thể giao tiếp với rất nhiều OS, platform và loại thiế
 
 - Nhờ vào cách thiết kế này đã giúp làm tăng tính tiện dụng của Ansible do không cần phải cài đặt và bảo trì agent trên nhiều host. Có thể nói rằng đây chính là một thế mạnh của Ansible so với các công cụ có cùng chức năng như Chef, SaltStack, Puppet (trong đó Salt có hỗ trợ cả 2 mode là agent và agentless).
 
-<img src= "" >
+<img src= "https://github.com/lean15998/Ansible/blob/main/image/01.png" >
 
 <ul>
     <ul>
@@ -103,6 +103,8 @@ node02                     : ok=3    changed=1    unreachable=0    failed=0    s
 #### Role: Là một tập playbook đã được định nghĩa để thực thi 1 tác vụ nhất định. Nếu bạn có nhiều server, mỗi server thực hiện những tasks riêng biệt. Và khi này nếu chúng ta viết tất cả vào cùng một file playbook thì khá là khó để quản lý. Do vậy roles sẽ giúp bạn phân chia khu vực với nhiệm vụ riêng biệt.
 
 #### Variables: Được dùng để lưu trữ các giá trị và có thể thay đổi được giá trị đó. Để khai báo biến, người dùng chỉ cần sử dụng thuộc tính vars đã được Ansible cung cấp sẵn.
+
+<img src= "https://github.com/lean15998/Ansible/blob/main/image/01.png" >
 
 #### Conditions: Ansible cho phép người dùng điều hướng lệnh chạy hay giới hạn phạm vi để thực hiện câu lệnh nào đó. Hay nói cách khác, khi thỏa mãn điều kiện thì câu lệnh mới được thực thi. Ngoài ra, Ansible còn cung cấp thuộc tính Register, một thuộc tính giúp nhận câu trả lời từ một câu lệnh. Sau đó ta có thể sử dụng chính kết quả đó để chạy những câu lệnh sau.
 - Cấu trúc lệnh cơ bản của ansible
