@@ -1,0 +1,32 @@
+---
+- hosts: node03
+  tasks:
+          - name: add repo
+            get_url:
+                    url: 'https://packages.grafana.com/gpg.key'
+                    dest: /tmp/grafana.key
+          - name: add key
+            ansible.builtin.apt_key:
+                    file: /tmp/grafana.key
+                    state: present
+          - name: import repo
+            shell: "echo 'deb https://packages.grafana.com/oss/deb stable main' > /etc/apt/sources.list.d/grafana.list"
+          - name: apt update
+            apt:
+                    update_cache: yes
+          - name: install grafana
+            apt:
+                    name: '{{item}}'
+                    state: latest
+            with_items:
+                    - grafana
+                    - apache2
+          - name: start grafana
+            service:
+                    name: 'grafana-server'
+                    state: started
+          - name: open port
+            ufw:
+                    rule: allow
+                    port: 3000
+                    proto: tcp           
