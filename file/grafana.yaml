@@ -1,5 +1,5 @@
 ---
-- hosts: node03
+- hosts: ubuntu01
   tasks:
           - name: add repo
             get_url:
@@ -25,8 +25,12 @@
             service:
                     name: 'grafana-server'
                     state: started
-          - name: open port
+          - name: open port 3000
             ufw:
                     rule: allow
                     port: 3000
-                    proto: tcp           
+                    proto: tcp
+          - name: restart grafana
+            service:
+                    name: 'grafana-server'
+                    state: restarted
