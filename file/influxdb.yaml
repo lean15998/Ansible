@@ -1,5 +1,5 @@
 ---
-- hosts: node03
+- hosts: ubuntu01
   tasks:
           - name: add repo
             get_url:
@@ -27,10 +27,16 @@
             service:
                     name: 'influxdb'
                     state: started
-          - name: allow port
+          - name: allow port 8086
             ufw:
                     rule: allow
                     port: 8086
+                    proto: tcp
+
+          - name: allow port 8088
+            ufw:
+                    rule: allow
+                    port: 8088
                     proto: tcp
           - name: cofigure influxdb
             ini_file:
@@ -48,7 +54,7 @@
                     path: /etc/influxdb/influxdb.conf
                     section: http
                     option: "bind-address"
-                    value: ':8086'
+                    value: "':8086'"
           - name: install python3-influxdb
             apt:
                     name: 'python3-influxdb'
