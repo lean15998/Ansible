@@ -1,5 +1,5 @@
 ---
-- hosts: node03
+- hosts: ubuntu02
   tasks:
           - name: add repo
             get_url:
@@ -50,4 +50,14 @@
                     path: /etc/telegraf/telegraf.conf
                     section: '[outputs.influxdb]'
                     option: "urls"
-                    value: "'http://10.0.0.51:8086'"
+                    value: "['http://10.0.0.52:8086']"
+          - name: configure influxdb hostname
+            ini_file:
+                    path: /etc/telegraf/telegraf.conf
+                    section: 'agent'
+                    option: "hostname"
+                    value: "'$HOSTNAME'"
+          - name: restart telegraf
+            service:
+                    name: 'telegraf'
+                    state: restarted
