@@ -1,0 +1,93 @@
+---
+- hosts: '{{hostname}}'
+  tasks:
+          - name: add repo influxdb
+            yum_repository:
+                    description: Influxdb upstream yum repo
+                    name: influxdb
+                    baseurl: "https://repos.influxdata.com/rhel/$releasever/$basearch/stable"
+                    gpgcheck: yes
+                    enabled: yes
+                    gpgkey: "https://repos.influxdata.com/influxdb.key"
+            when: ansible_distribution == "CentOS"
+          - name: install influxdb
+            yum:
+                    name: influxdb
+            when: ansible_distribution == "CentOS"
+          - name: download telegraf
+            get_url:
+                    url: https://dl.influxdata.com/telegraf/releases/telegraf-1.21.4-1.x86_64.rpm
+                    dest: /tmp/telegraf.rpm
+            when: ansible_distribution == "CentOS"
+          - name: install telegraf
+            dnf:
+                    name: /tmp/telegraf.rpm
+                    state: present
+            when: ansible_distribution == "CentOS"
+          - name: add repo
+            get_url:
+                    url: 'https://repos.influxdata.com/influxdb.key'
+                    dest: /tmp/influxdb.key
+            when: ansible_distribution == "Ubuntu"
+          - name: add key
+            ansible.builtin.apt_key:
+                    file: /tmp/influxdb.key
+                    state: present
+            when: ansible_distribution == "Ubuntu"
+          - name: source /lsb-release
+            shell: source /root/.bashrc && source /etc/lsb-release
+            args:
+                    executable: /bin/bash
+            when: ansible_distribution == "Ubuntu"
+          - name: import repo
+            shell: "echo 'deb https://repos.influxdata.com/ubuntu focal stable' > /etc/apt/sources.list.d/influxdb.list"
+            when: ansible_distribution == "Ubuntu"
+          - name: apt update
+            apt:
+                    update_cache: yes
+            when: ansible_distribution == "Ubuntu"
+          - name: install influxdb-client
+            apt:
+                    name: 'influxdb-client'
+                    state: latest
+            when: ansible_distribution == "Ubuntu"
+          - name: download telegraf
+            get_url:
+                    url: https://dl.influxdata.com/telegraf/releases/telegraf_1.21.4-1_amd64.deb
+                    dest: /tmp/telegraf.deb
+            when: ansible_distribution == "Ubuntu"
+          - name: install telegraf
+            apt:
+                    deb: /tmp/telegraf.deb
+            when: ansible_distribution == "Ubuntu"
+          - name: start telegraf
+            service:
+                    name: 'telegraf'
+                    state: started
+          - name: configure telegraf
+            ini_file:
+                    path: /etc/telegraf/telegraf.conf
+                    section: '[outputs.influxdb]'
+                    option: "{{item}}"
+                    value: "'telegraf'"
+            with_items:
+                    - database
+                    - username
+                    - password
+
+          - name: configure influxdb port
+            ini_file:
+                    path: /etc/telegraf/telegraf.conf
+                    section: '[outputs.influxdb]'
+                    option: "urls"
+                    value: "['http://10.0.0.52:8086']"
+          - name: configure influxdb hostname
+            ini_file:
+                    path: /etc/telegraf/telegraf.conf
+                    section: 'agent'
+                    option: "hostname"
+                    value: '"{{hostname}}"'
+          - name: restart telegraf
+            service:
+                    name: 'telegraf'
+                    state: restarted
