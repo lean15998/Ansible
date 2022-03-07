@@ -441,9 +441,9 @@ ubuntu01                   : ok=7    changed=6    unreachable=0    failed=0    s
 
 ### Kết quả
 
-<img src="">
+<img src="https://github.com/lean15998/Ansible/blob/main/image/05.png">
 
 
+<img src="https://github.com/lean15998/Ansible/blob/main/image/06.png">
 
-
-  
+<img src="https://github.com/lean15998/Ansible/blob/main/image/07.png">  
