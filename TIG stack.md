@@ -441,9 +441,12 @@ ubuntu01                   : ok=7    changed=6    unreachable=0    failed=0    s
 
 ### Kết quả
 
+- Đăng nhập dashboard
 <img src="https://github.com/lean15998/Ansible/blob/main/image/05.png">
 
+- Import influxdb
 
 <img src="https://github.com/lean15998/Ansible/blob/main/image/06.png">
 
+- Thêm dashboard
 <img src="https://github.com/lean15998/Ansible/blob/main/image/07.png">  
