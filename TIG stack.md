@@ -26,6 +26,24 @@
 
 ```
 
+### Khai báo file inventory
+
+```sh
+root@quynv:~# vim /etc/ansible/hosts
+
+[telegraf]
+ubuntu02 ansible_host=10.0.0.53 ansible_port=22 ansible_user=root
+centos01 ansible_host=10.0.0.61 ansible_port=22 ansible_user=root
+
+[influxdb]
+ubuntu01 ansible_host=10.0.0.52 ansible_port=22 ansible_user=root
+
+[grafana]
+ubuntu01 ansible_host=10.0.0.52 ansible_port=22 ansible_user=root
+```
+
+### Viết playbook
+
 - influxdb
 
 ```sh
@@ -223,6 +241,10 @@
 
   ```
   
+### Chạy playbook 
+
+- Triển khai influxdb trên ubuntu01
+  
 ```sh
 root@quynv:/etc/ansible/playbook# ansible-playbook influxdb.yaml --extra-vars '{"hostname":"influxdb","databasename":"telegraf","username":"telegraf","userpass":"telegraf"}'
 
@@ -268,7 +290,7 @@ ubuntu01                   : ok=11   changed=9    unreachable=0    failed=0    s
 
 ```
 
-- telegraf
+-  Triển khai telegraf trên ubuntu02 và centos01
 
 ```sh
 root@quynv:/etc/ansible/playbook# ansible-playbook telegraf1.yaml --extra-vars '{"hostname":"centos01","database":"telegraf","username":"telegraf","password":"telegraf","ip_database":"10.0.0.52"}'
@@ -382,7 +404,7 @@ changed: [ubuntu02]
 PLAY RECAP ***************************************************************************************************************************************************************
 ubuntu02                   : ok=14   changed=12   unreachable=0    failed=0    skipped=2    rescued=0    ignored=0   
 ```
-
+- Triển khai grafana trên ubuntu01
 
 ```sh
 root@quynv:/etc/ansible/playbook# ansible-playbook grafana.yaml --extra-vars '{"hostname":"grafana"}'
@@ -415,6 +437,12 @@ PLAY RECAP *********************************************************************
 ubuntu01                   : ok=7    changed=6    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
 
 ```
+
+
+### Kết quả
+
+<img src="">
+
 
 
 
