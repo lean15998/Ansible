@@ -24,21 +24,13 @@
                     port: 8086
                     proto: tcp
             when: ansible_distribution == "Ubuntu"
-          - name: configure influxdb
-            ini_file:
+         - name: remove file configure
+            file:
                     path: /etc/influxdb/influxdb.conf
-                    section: http
-                    option: "{{item}}"
-                    value: 'true'
-            with_items:
-                    - enable
-                    - log_enabled
-                    - flux-enabled
-          - name: configure influxdb port
-            ini_file:
-                    path: /etc/influxdb/influxdb.conf
-                    section: http
-                    option: "bind-address"
-                    value: "':8086'"
+                    state: absent
+          - name: Copy influxdb.conf file
+            template:
+                    src: template.j2
+                    dest: /etc/influxdb/influxdb.conf
             notify:
                     - restart influxdb
