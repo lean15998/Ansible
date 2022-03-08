@@ -1,0 +1,6 @@
+---
+# vars file for influxdb
+databasename: "telegraf"
+username: "telegraf"
+userpass: "telegraf"
+ip_database: "10.0.0.52"
