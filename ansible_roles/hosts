@@ -1,0 +1,9 @@
+[telegraf]
+ubuntu02 ansible_host=10.0.0.53 ansible_port=22 ansible_user=root
+centos01 ansible_host=10.0.0.61 ansible_port=22 ansible_user=root
+
+[influxdb]
+ubuntu01 ansible_host=10.0.0.52 ansible_port=22 ansible_user=root
+
+[grafana]
+buntu01 ansible_host=10.0.0.52 ansible_port=22 ansible_user=root
