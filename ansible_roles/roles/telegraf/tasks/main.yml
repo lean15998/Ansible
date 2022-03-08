@@ -1,0 +1,76 @@
+---
+# tasks file for telegraf
+          - name: add repo influx
+            yum_repository:
+                    description: Influxdb upstream yum repo
+                    name: influxdb
+                    baseurl: "https://repos.influxdata.com/rhel/$releasever/$basearch/stable"
+                    gpgcheck: yes
+                    enabled: yes
+                    gpgkey: "https://repos.influxdata.com/influxdb.key"
+            when: ansible_distribution == "CentOS"
+          - name: Install telegraf
+            yum:
+                    name: 'telegraf'
+                    state: latest
+            when: ansible_distribution == "CentOS"
+          - name: add key
+            apt_key:
+                    url: "https://repos.influxdata.com/influxdb.key"
+                    state: present
+            when: ansible_distribution == "Ubuntu"
+          - name: add repo
+            ansible.builtin.apt_repository:
+                    repo: deb https://repos.influxdata.com/ubuntu focal stable
+                    state: present
+            when: ansible_distribution == "Ubuntu"
+          - name: apt update
+            apt:
+                    update_cache: yes
+            when: ansible_distribution == "Ubuntu"
+          - name: install influxdb-client
+            apt:
+                    name: 'influxdb-client'
+                    state: latest
+            when: ansible_distribution == "Ubuntu"
+          - name: download telegraf
+            get_url:
+                    url: https://dl.influxdata.com/telegraf/releases/telegraf_1.21.4-1_amd64.deb
+                    dest: /tmp/telegraf.deb
+            when: ansible_distribution == "Ubuntu"
+          - name: install telegraf
+            apt:
+                    deb: /tmp/telegraf.deb
+            when: ansible_distribution == "Ubuntu"
+            notify:
+                    - start telegraf
+          - name: configure telegraf
+            ini_file:
+                    path: /etc/telegraf/telegraf.conf
+                    section: '[outputs.influxdb]'
+                    option: "database"
+                    value: '"{{databasename}}"'
+          - name: configure telegraf
+            ini_file:
+                    path: /etc/telegraf/telegraf.conf
+                    section: '[outputs.influxdb]'
+                    option: "username"
+                    value: '"{{username}}"'
+          - name: configure telegraf
+            ini_file:
+                    path: /etc/telegraf/telegraf.conf
+                    section: '[outputs.influxdb]'
+                    option: "password"
+                    value: '"{{userpass}}"'
+          - name: configure telegraf
+            ini_file:
+                    path: /etc/telegraf/telegraf.conf
+                    section: '[outputs.influxdb]'
+                    option: "urls"
+                    value: "['http://{{ip_database}}:8086']"
+          - name: configure telegraf
+            ini_file:
+                    path: /etc/telegraf/telegraf.conf
+                    section: 'agent'
+                    option: "hostname"
+                    value: "$H"
