@@ -1,0 +1,6 @@
+---
+# handlers file for grafana
+          - name: start grafana
+            service:
+                    name: 'grafana-server'
+                    state: started
