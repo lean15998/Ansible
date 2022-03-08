@@ -1,0 +1,16 @@
+---
+# tasks file for create_db
+          - name: create_db
+            influxdb_database:
+                    hostname: "{{ip_database}}"
+                    database_name: "{{databasename}}"
+                    state: 'present'
+          - name: create_user_db
+            influxdb_user:
+                    hostname: "{{ip_database}}"
+                    user_name: "{{username}}"
+                    user_password: "{{userpass}}"
+                    state: 'present'
+                    grants:
+                            - database: "{{databasename}}"
+                              privilege: 'all'
