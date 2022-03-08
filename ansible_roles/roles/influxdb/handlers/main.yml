@@ -1,0 +1,10 @@
+---
+# handlers file for influxdb
+          - name: restart influxdb
+            service:
+                    name: 'influxdb'
+                    state: restarted
+          - name: start influxdb
+            service:
+                    name: 'influxdb'
+                    state: started
