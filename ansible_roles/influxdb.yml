@@ -1,0 +1,5 @@
+---
+- name: Setup Monitoring Services
+  hosts: ['centos01','ubuntu02']
+  roles:
+      - telegraf
