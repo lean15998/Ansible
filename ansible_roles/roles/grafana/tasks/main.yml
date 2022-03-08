@@ -1,0 +1,29 @@
+---
+# tasks file for grafana
+          - name: add key
+            apt_key:
+                    url: "https://packages.grafana.com/gpg.key"
+                    state: present
+            when: ansible_distribution == "Ubuntu"
+          - name: add repo
+            ansible.builtin.apt_repository:
+                    repo: deb https://packages.grafana.com/oss/deb stable main
+                    state: present
+            when: ansible_distribution == "Ubuntu"
+          - name: apt update
+            apt:
+                    update_cache: yes
+          - name: install grafana
+            apt:
+                    name: '{{item}}'
+                    state: latest
+            with_items:
+                    - grafana
+                    - apache2
+            notify:
+                    - start grafana
+          - name: open port
+            ufw:
+                    rule: allow
+                    port: 3000
+                    proto: tcp           
