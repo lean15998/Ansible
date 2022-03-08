@@ -1,0 +1,6 @@
+---
+- name: Setup Monitoring Services
+  hosts: ubuntu01
+  roles:
+      - influxdb
+      - grafana
