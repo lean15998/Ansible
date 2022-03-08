@@ -243,6 +243,9 @@ ubuntu01 ansible_host=10.0.0.52 ansible_port=22 ansible_user=root
   
 ### Chạy playbook 
 
+Ví dụ về role triển khai TIG stack
+<a href="https://github.com/lean15998/Ansible/tree/main/ansible_roles/roles">tại đây!</a>
+
 - Triển khai influxdb trên ubuntu01
   
 ```sh
