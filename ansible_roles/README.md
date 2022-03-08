@@ -21,7 +21,7 @@
 
 # 2. Viết role
 
-#### Tạo role bằng lệnh ansible-glaxy
+#### Tạo role bằng lệnh ansible-galaxy
 
 ```sh
 root@quynv:/etc/ansible/roles# ansible-galaxy init influxdb
