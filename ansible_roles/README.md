@@ -122,6 +122,26 @@ root@quynv:/etc/ansible/roles# cat grafana/handlers/main.yml
                     state: started
 ```
 
+- templates
+
+```sh
+root@quynv:/etc/ansible/roles# cat ìnluxdb/templates/template.j2
+
+[meta]
+  dir = "/var/lib/influxdb/meta"
+
+[data]
+  dir = "/var/lib/influxdb/data"
+  wal-dir = "/var/lib/influxdb/wal"
+  series-id-set-cache-size = 100
+
+[http]
+enable = true
+log_enabled = true
+flux-enabled = true
+bind-address = ':8086'
+```
+
 # 3. Chạy role
 
 - Sau khi viết xong role. Ta tạo file host và playbook để khởi chạy
@@ -159,10 +179,19 @@ root@quynv:/etc/ansible# cat test/telegraf.yml
       - telegraf
 ```
 
+```sh
+root@quynv:/etc/ansible/test# cat createdb.yml 
+---
+- name: create db
+  hosts: ubuntu01
+  roles:
+      - create_db
+```
+
 - Khởi chạy playbook influxdb-grafana.yml
 
 ```sh
-root@quynv:/etc/ansible/test# ansible-playbook -i hosts influxdb-grafana.yml 
+root@quynv:/etc/ansible/test# ansible-playbook influxdb-grafana.yml
 
 PLAY [Setup Monitoring Services] *****************************************************************************************************************************************
 
@@ -184,21 +213,10 @@ changed: [ubuntu01]
 TASK [influxdb : allow port] *********************************************************************************************************************************************
 changed: [ubuntu01]
 
-TASK [influxdb : configure influxdb] *************************************************************************************************************************************
-changed: [ubuntu01] => (item=enable)
-changed: [ubuntu01] => (item=log_enabled)
-changed: [ubuntu01] => (item=flux-enabled)
-
-TASK [influxdb : configure influxdb port] ********************************************************************************************************************************
+TASK [influxdb : remove file configure] **********************************************************************************************************************************
 changed: [ubuntu01]
 
-TASK [influxdb : restart influxdb] ***************************************************************************************************************************************
-changed: [ubuntu01]
-
-TASK [influxdb : create_db] **********************************************************************************************************************************************
-changed: [ubuntu01]
-
-TASK [influxdb : create_user_db] *****************************************************************************************************************************************
+TASK [influxdb : Copy grafana.ini file] **********************************************************************************************************************************
 changed: [ubuntu01]
 
 TASK [grafana : add key] *************************************************************************************************************************************************
@@ -221,14 +239,38 @@ RUNNING HANDLER [grafana : start grafana] **************************************
 changed: [ubuntu01]
 
 PLAY RECAP ***************************************************************************************************************************************************************
-ubuntu01                   : ok=17   changed=16   unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+ubuntu01                   : ok=14   changed=13   unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
 ```
+
+- Khởi chạy playbook createdb.yml
+
+```sh
+root@quynv:/etc/ansible/test# ansible-playbook createdb.yml --ask-vault-pass
+Vault password: 
+
+PLAY [create db] *********************************************************************************************************************************************************
+
+TASK [Gathering Facts] ***************************************************************************************************************************************************
+ok: [ubuntu01]
+
+TASK [create_db : create_db] *********************************************************************************************************************************************
+ok: [ubuntu01]
+
+TASK [create_db : create_user_db] ****************************************************************************************************************************************
+changed: [ubuntu01]
+
+PLAY RECAP ***************************************************************************************************************************************************************
+ubuntu01                   : ok=3    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
+```
+
 
 - Khởi chạy playbook telegraf.yml
 
 
 ```sh
-root@quynv:/etc/ansible/test# ansible-playbook -i hosts telegraf.yml 
+root@quynv:/etc/ansible/test# ansible-playbook telegraf.yml 
 
 PLAY [Setup Monitoring Services] *****************************************************************************************************************************************
 
